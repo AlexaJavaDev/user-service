@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -19,13 +20,11 @@ public class UserDaoImplem implements UserDao {
     private final SessionFactory sessionFactory;
 
     public UserDaoImplem() {
-        try {
-            // Создаём сеансы из hibernate.cfg.xml
-            this.sessionFactory = new Configuration().configure().buildSessionFactory();
-        } catch (Exception e) {
-            logger.error("Не удалось инициализировать SessionFactory: {}", e.getMessage(), e);
-            throw new RuntimeException("Ошибка инициализации Hibernate", e);
-        }
+        this.sessionFactory = new Configuration().configure().buildSessionFactory();
+    }
+
+    public UserDaoImplem(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
@@ -52,6 +51,21 @@ public class UserDaoImplem implements UserDao {
             return Optional.ofNullable(user);
         } catch (Exception e) {
             logger.error("Ошибка при поиске пользователя по id {}: {}", id, e.getMessage(), e);
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<User> query = builder.createQuery(User.class);
+            Root<User> root = query.from(User.class);
+            query.select(root).where(builder.equal(root.get("email"), email));
+            User user = session.createQuery(query).uniqueResult();
+            return Optional.ofNullable(user);
+        } catch (Exception e) {
+            logger.error("Ошибка при поиске по email {}: {}", email, e.getMessage(), e);
             return Optional.empty();
         }
     }
