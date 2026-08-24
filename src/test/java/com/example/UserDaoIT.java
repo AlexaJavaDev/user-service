@@ -1,5 +1,8 @@
 package com.example;
 
+import com.example.dao.UserDao;
+import com.example.dao.UserDaoImpl;
+import com.example.entity.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.*;
@@ -50,7 +53,7 @@ class UserDaoIT {
 
     @BeforeEach
     void setUp() {
-        userDao = new UserDaoImplem(sessionFactory);
+        userDao = new UserDaoImpl(sessionFactory);
         // Очистка таблицы перед каждым тестом, для изоляции
         try (var session = sessionFactory.openSession()) {
             session.createNativeQuery("DELETE FROM users").executeUpdate();

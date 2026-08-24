@@ -1,25 +1,23 @@
-package com.example;
+package com.example.service;
 
+import com.example.dao.UserDao;
+import com.example.entity.User;
 import com.example.exception.UserAlreadyExistsException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
 
-public class UserServiceImplem implements UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImplem.class);
+public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
-    public UserServiceImplem(UserDao userDao) {
+    public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 
     @Override
     public User create(User user) {
-        // Проверка уникальности email
         if (userDao.findByEmail(user.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException("Пользователь с email " + user.getEmail() + " уже существует");
+            throw new UserAlreadyExistsException("Email " + user.getEmail() + " уже занят");
         }
         return userDao.create(user);
     }
@@ -36,10 +34,9 @@ public class UserServiceImplem implements UserService {
 
     @Override
     public User update(User user) {
-        // При обновлении проверяем, что новый email не занят другим пользователем
         Optional<User> existing = userDao.findByEmail(user.getEmail());
         if (existing.isPresent() && !existing.get().getId().equals(user.getId())) {
-            throw new UserAlreadyExistsException("Email " + user.getEmail() + " уже используется другим пользователем");
+            throw new UserAlreadyExistsException("Email " + user.getEmail() + " занят другим пользователем");
         }
         return userDao.update(user);
     }

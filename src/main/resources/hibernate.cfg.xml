@@ -1,28 +1,24 @@
-<!DOCTYPE hibernate-configuration PUBLIC
-        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
         <!-- Настройки подключения к PostgreSQL -->
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/userdb</property>
         <property name="hibernate.connection.username">postgres</property>
-        <property name="hibernate.connection.password">password</property> <!-- Изменить на свой пароль -->
-
-        <!-- Диалект PostgreSQL -->
+        <property name="hibernate.connection.password">password</property> <!-- Замените на свой пароль -->
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 
-        <!-- Автоматическое создание/обновление схемы (для разработки) -->
+        <!-- Создание/обновление схемы -->
         <property name="hibernate.hbm2ddl.auto">update</property>
 
-        <!-- Показывать SQL в консоли -->
+        <!-- Логирование SQL -->
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
 
-        <!-- Настройка пула соединений (Hibernate встроенный) -->
-        <property name="hibernate.connection.pool_size">5</property>
+        <!-- Пул соединений HikariCP -->
+        <property name="hibernate.hikari.maximumPoolSize">5</property>
+        <property name="hibernate.hikari.connectionTimeout">30000</property>
 
-        <!-- Имена сущностей -->
-        <mapping class="com.example.User"/>
+        <!-- Регистрация сущности -->
+        <mapping class="com.example.entity.User"/>
     </session-factory>
 </hibernate-configuration>

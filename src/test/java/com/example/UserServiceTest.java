@@ -1,6 +1,9 @@
 package com.example;
 
+import com.example.dao.UserDao;
+import com.example.entity.User;
 import com.example.exception.UserAlreadyExistsException;
+import com.example.service.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +23,7 @@ class UserServiceTest {
     private UserDao userDao;
 
     @InjectMocks
-    private UserServiceImplem userService;
+    private UserServiceImpl userService;
 
     private User testUser;
 

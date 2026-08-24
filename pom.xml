@@ -11,97 +11,114 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Обновляем версию Java до 25 -->
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
     </properties>
 
     <dependencies>
+        <!-- Hibernate 7 (Jakarta Persistence 3.2), поддерживает Java 25 -->
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.6.15.Final</version>
+            <version>7.4.4.Final</version>
         </dependency>
 
+        <!-- Аннотационный процессор для JPA (Обязателен для Hibernate 7) -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jpa-modelgen</artifactId>
+            <version>7.4.4.Final</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Драйвер PostgreSQL (актуальная версия 2026) -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.5.4</version>
+            <version>42.7.13</version>
         </dependency>
 
+        <!-- Логирование Log4j 2 (актуальная версия) -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.20.0</version>
+            <version>2.24.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.20.0</version>
+            <version>2.24.3</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.5.6-Final</version>
-            <scope>provided</scope>
-        </dependency>
-
+        <!-- Тестирование: JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.9.2</version>
+            <version>5.12.2</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Mockito для юнит-тестов -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.1.1</version>
+            <version>5.16.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <version>1.19.3</version>
-            <scope>test</scope>
-        </dependency>
+
+        <!-- Testcontainers для интеграционных тестов с PostgreSQL -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.19.3</version>
+            <version>1.21.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.19.3</version>
+            <version>1.21.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M7</version>
-            </plugin>
-
+            <!-- Компилятор Java 25 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.15.0</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>25</source>
+                    <target>25</target>
+                    <!-- Указываем процессор для Hibernate/Jakarta -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.hibernate.orm</groupId>
+                            <artifactId>hibernate-jpa-modelgen</artifactId>
+                            <version>7.4.4.Final</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
 
+            <!-- Плагин для запуска тестов на Java 25 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+            </plugin>
+
+            <!-- Сборка JAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.example.ConsolApp</mainClass>
+                            <mainClass>com.example.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
